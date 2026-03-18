@@ -19,7 +19,7 @@ Tem questões normais **e** questões com **Brawl Stars** 🎮 e **Blox Fruits**
 4. No final aparece sua pontuação, o tempo e um resumo por capítulo
 5. Pode repetir quantas vezes quiser — as questões são sorteadas aleatoriamente!
 
-🔗 **Link para jogar:** [Clique aqui!](https://cscolombo.github.io/quiz-augusto)
+🔗 **Link para jogar:** [Clique aqui!](https://cscolombo.github.io/augusto)
 
 ---
 
