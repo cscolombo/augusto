@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Português – Augusto 5º Ano</title>
+<style>
+:root{
+  --roxo:#7c4dff;--rosa:#e84393;--amarelo:#ffd93d;
+  --verde:#00e5c0;--laranja:#ff6b35;--azul:#4361ee;
+  --bg:#0d0820;--card:#160d30;--card2:#1e1240;--text:#f0e6ff;
+  --facil:#00e5c0;--medio:#ffd93d;--dificil:#ff4d7d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 10%,rgba(124,77,255,.18) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(232,67,147,.12) 0%,transparent 60%);
+}
+
+/* ── ESTRELAS ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 8%  12%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 45%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 48% 8%,rgba(255,255,255,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 28%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 84% 62%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 33% 72%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 57% 83%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 91%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 88%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 44% 54%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 76% 17%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 3%  55%,rgba(255,255,255,.4) 0%,transparent 100%);
+}
+#app{position:relative;z-index:1}
+
+/* ══════════════════════ INÍCIO ══════════════════════ */
+#tela-inicio{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;padding:1.5rem 1.2rem;
+  text-align:center;animation:fadeIn .7s ease;
+}
+
+.hero-emoji{font-size:4rem;line-height:1;margin-bottom:.5rem;animation:flutuando 3s ease-in-out infinite}
+@keyframes flutuando{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+.titulo-jogo{
+  font-weight:900;font-size:clamp(1.8rem,7vw,3rem);line-height:1.1;margin-bottom:.3rem;
+  background:linear-gradient(130deg,var(--amarelo) 0%,var(--rosa) 55%,var(--roxo) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.subtitulo{font-size:.85rem;color:#a890c8;margin-bottom:1.4rem;letter-spacing:.3px}
+
+.card-intro{
+  background:var(--card);border:1.5px solid rgba(124,77,255,.35);
+  border-radius:18px;padding:1.1rem 1.4rem;max-width:480px;width:100%;
+  margin-bottom:1.4rem;box-shadow:0 0 32px rgba(124,77,255,.2);
+}
+.card-intro p{font-size:.88rem;color:#c8b8e8;margin-bottom:.5rem;line-height:1.65}
+.card-intro p:last-child{margin-bottom:0}
+.card-intro strong{color:var(--amarelo)}
+
+/* Níveis */
+.nivel-titulo{font-weight:900;font-size:1.05rem;color:var(--amarelo);margin-bottom:.8rem}
+.niveis-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:.7rem;
+  max-width:440px;width:100%;margin-bottom:1.3rem;
+}
+.nivel-btn{
+  background:var(--card);border:2.5px solid transparent;border-radius:16px;
+  padding:.95rem .85rem;cursor:pointer;transition:all .22s;text-align:center;color:var(--text);
+}
+.nivel-btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.45)}
+.nivel-btn.facil  {border-color:rgba(0,229,192,.35)}
+.nivel-btn.medio  {border-color:rgba(255,217,61,.35)}
+.nivel-btn.dificil{border-color:rgba(255,77,125,.35)}
+.nivel-btn.misto  {border-color:rgba(124,77,255,.35);grid-column:1/-1}
+.nivel-btn.selecionado{transform:scale(1.04)}
+.nivel-btn.facil.selecionado  {border-color:var(--facil); box-shadow:0 0 20px rgba(0,229,192,.5)}
+.nivel-btn.medio.selecionado  {border-color:var(--medio); box-shadow:0 0 20px rgba(255,217,61,.5)}
+.nivel-btn.dificil.selecionado{border-color:var(--dificil);box-shadow:0 0 20px rgba(255,77,125,.5)}
+.nivel-btn.misto.selecionado  {border-color:var(--roxo);  box-shadow:0 0 20px rgba(124,77,255,.5)}
+.ni{font-size:1.8rem;display:block;margin-bottom:.2rem}
+.nn{font-weight:900;font-size:1rem;display:block}
+.nd{font-size:.72rem;color:#9880b8;display:block;margin-top:.1rem;line-height:1.3}
+.nivel-btn.facil  .nn{color:var(--facil)}
+.nivel-btn.medio  .nn{color:var(--medio)}
+.nivel-btn.dificil .nn{color:var(--dificil)}
+.nivel-btn.misto  .nn{color:#b89aff}
+
+.btn-iniciar{
+  background:linear-gradient(135deg,var(--rosa),var(--laranja));
+  color:#fff;border:none;border-radius:50px;padding:.85rem 2.6rem;
+  font-size:1.05rem;font-weight:900;cursor:pointer;
+  box-shadow:0 4px 22px rgba(232,67,147,.5);
+  transition:transform .2s,box-shadow .2s,opacity .2s;letter-spacing:.4px;
+}
+.btn-iniciar:hover:not(:disabled){transform:scale(1.05);box-shadow:0 6px 30px rgba(232,67,147,.7)}
+.btn-iniciar:disabled{opacity:.35;cursor:not-allowed}
+
+/* ══════════════════════ QUIZ ══════════════════════ */
+#tela-quiz{display:none;padding:1.3rem 1.1rem;max-width:680px;margin:0 auto}
+
+.quiz-header{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;
+}
+.prog-txt{font-size:.8rem;color:#a890c8;font-weight:700;white-space:nowrap}
+.barra-wrap{flex:1;min-width:100px;height:9px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden}
+.barra-fill{height:100%;border-radius:9px;transition:width .5s ease;background:linear-gradient(90deg,var(--verde),var(--amarelo))}
+.pts-txt{font-weight:900;font-size:1rem;color:var(--amarelo);white-space:nowrap}
+
+.badges-row{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.85rem}
+.cap-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.24rem .8rem;border-radius:20px;font-size:.73rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.7px;color:#fff;
+}
+.dif-badge{
+  display:inline-flex;align-items:center;gap:.25rem;
+  padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:800;
+}
+.dif-badge.facil  {background:rgba(0,229,192,.18); color:var(--facil)}
+.dif-badge.medio  {background:rgba(255,217,61,.18); color:var(--medio)}
+.dif-badge.dificil{background:rgba(255,77,125,.18); color:var(--dificil)}
+
+.card-q{
+  background:var(--card);border-radius:18px;
+  padding:1.5rem 1.3rem;margin-bottom:1.2rem;
+  border:1.5px solid rgba(124,77,255,.28);
+  box-shadow:0 8px 32px rgba(0,0,0,.45);
+  animation:slideUp .38s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.num-q{font-size:.76rem;color:#7860aa;font-weight:700;margin-bottom:.35rem}
+.txt-q{font-size:1rem;font-weight:700;line-height:1.58;margin-bottom:1.25rem;color:#f0e6ff}
+.txt-q em{font-style:italic;color:var(--amarelo)}
+.gtag{
+  background:rgba(124,77,255,.22);border-radius:7px;
+  padding:.06rem .42rem;font-size:.8em;color:#b89aff;
+  font-style:normal;font-weight:700;
+}
+
+.opcoes{display:flex;flex-direction:column;gap:.6rem}
+.btn-op{
+  background:rgba(255,255,255,.04);border:2px solid rgba(124,77,255,.28);
+  border-radius:13px;padding:.78rem .95rem;color:var(--text);
+  font-family:inherit;font-size:.92rem;font-weight:600;
+  cursor:pointer;text-align:left;transition:all .18s;
+  display:flex;align-items:flex-start;gap:.6rem;
+}
+.btn-op:hover:not(:disabled){background:rgba(124,77,255,.18);border-color:var(--roxo);transform:translateX(4px)}
+.letra{
+  background:rgba(124,77,255,.28);border-radius:7px;
+  width:26px;height:26px;min-width:26px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.8rem;flex-shrink:0;margin-top:1px;
+}
+.btn-op.correta{background:rgba(0,229,192,.18);border-color:var(--verde);animation:pulseV .45s ease}
+.btn-op.correta .letra{background:var(--verde);color:#06100e}
+.btn-op.errada {background:rgba(255,77,125,.15);border-color:var(--dificil)}
+.btn-op.errada  .letra{background:var(--dificil);color:#fff}
+@keyframes pulseV{0%{transform:scale(1)}50%{transform:scale(1.025)}100%{transform:scale(1)}}
+
+.fb{margin-top:.9rem;padding:.85rem 1rem;border-radius:13px;font-size:.87rem;line-height:1.55;display:none}
+.fb.show{display:block;animation:fadeIn .28s ease}
+.fb.certo {background:rgba(0,229,192,.14);border:1px solid var(--verde); color:#8dffd8}
+.fb.errado{background:rgba(255,77,125,.14);border:1px solid var(--dificil);color:#ffb0c8}
+
+.btn-prox{
+  display:none;width:100%;
+  background:linear-gradient(135deg,var(--roxo),var(--azul));
+  color:#fff;border:none;border-radius:13px;padding:.9rem;
+  font-weight:900;font-size:1rem;cursor:pointer;margin-top:.85rem;
+  transition:opacity .2s,transform .2s;
+}
+.btn-prox:hover{opacity:.9;transform:scale(1.02)}
+.btn-prox.show{display:block;animation:fadeIn .28s ease .1s both}
+
+/* ══════════════════════ RESULTADO ══════════════════════ */
+#tela-resultado{
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;padding:2rem 1.2rem;
+  text-align:center;animation:fadeIn .7s ease;
+}
+.res-emoji{font-size:4.5rem;animation:flutuando 3s ease-in-out infinite}
+.res-titulo{font-weight:900;font-size:clamp(1.7rem,5vw,2.6rem);margin:.4rem 0}
+.res-nota{
+  font-size:3.6rem;font-weight:900;
+  background:linear-gradient(135deg,var(--amarelo),var(--laranja));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin:.3rem 0;
+}
+.res-sub{color:#a890c8;font-size:.9rem;margin-bottom:1.2rem}
+
+.resumo-grid{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.2rem}
+.rc{
+  background:var(--card);border-radius:14px;
+  padding:.75rem 1rem;min-width:95px;
+  border:1.5px solid rgba(124,77,255,.28);text-align:center;
+}
+.rc .rt{font-size:.68rem;color:#7860aa;font-weight:700;text-transform:uppercase;margin-bottom:.2rem}
+.rc .rv{font-weight:900;font-size:1.3rem}
+
+.botoes-res{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:.5rem}
+.btn-rep{
+  background:linear-gradient(135deg,var(--verde),var(--azul));
+  color:#fff;border:none;border-radius:50px;padding:.78rem 1.8rem;
+  font-weight:900;font-size:.95rem;cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,229,192,.35);transition:transform .2s;
+}
+.btn-rep:hover{transform:scale(1.05)}
+.btn-menu-btn{
+  background:linear-gradient(135deg,var(--roxo),var(--rosa));
+  color:#fff;border:none;border-radius:50px;padding:.78rem 1.8rem;
+  font-weight:900;font-size:.95rem;cursor:pointer;
+  box-shadow:0 4px 18px rgba(124,77,255,.35);transition:transform .2s;
+}
+.btn-menu-btn:hover{transform:scale(1.05)}
+
+/* CONFETTI */
+.confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:999}
+.cp{position:absolute;top:-20px;border-radius:2px;animation:cair 3s ease-in forwards}
+@keyframes cair{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+@media(max-width:430px){
+  .niveis-grid{grid-template-columns:1fr}
+  .nivel-btn.misto{grid-column:1}
+  .txt-q{font-size:.92rem}
+  .btn-op{font-size:.84rem;padding:.7rem .8rem}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ INÍCIO ══ -->
+<div id="tela-inicio">
+  <div class="hero-emoji">📖✨</div>
+  <div class="titulo-jogo">Quiz dos Contos Mágicos!</div>
+  <div class="subtitulo">Revisão de Língua Portuguesa · 5º Ano · Augusto</div>
+
+  <div class="card-intro">
+    <p>Olá, <strong>Augusto</strong>! 👋 Escolha o nível e bora revisar para a prova!</p>
+    <p>Tem questões com <strong>Brawl Stars</strong> 🎮 e <strong>Blox Fruits</strong> ⚔️ — português nunca foi tão divertido!</p>
+  </div>
+
+  <div class="nivel-titulo">🎯 Escolha o nível:</div>
+  <div class="niveis-grid">
+    <button class="nivel-btn facil"   onclick="selNivel('facil',this)">
+      <span class="ni">🟢</span><span class="nn">Fácil</span>
+      <span class="nd">10 questões aleatórias<br>das 20 disponíveis</span>
+    </button>
+    <button class="nivel-btn medio"   onclick="selNivel('medio',this)">
+      <span class="ni">🟡</span><span class="nn">Médio</span>
+      <span class="nd">10 questões aleatórias<br>das 20 disponíveis</span>
+    </button>
+    <button class="nivel-btn dificil" onclick="selNivel('dificil',this)">
+      <span class="ni">🔴</span><span class="nn">Difícil</span>
+      <span class="nd">10 questões aleatórias<br>das 20 disponíveis</span>
+    </button>
+    <button class="nivel-btn misto"   onclick="selNivel('misto',this)">
+      <span class="ni">🎲</span><span class="nn">Misturado</span>
+      <span class="nd">30 questões: 10 fáceis + 10 médias + 10 difíceis, em ordem aleatória</span>
+    </button>
+  </div>
+
+  <button class="btn-iniciar" id="btn-ini" onclick="iniciar()" disabled>▶ Começar!</button>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div id="tela-quiz">
+  <div class="quiz-header">
+    <span class="prog-txt" id="prog-txt">Q 1/10</span>
+    <div class="barra-wrap"><div class="barra-fill" id="barra" style="width:10%"></div></div>
+    <span class="pts-txt">⭐ <span id="pts">0</span></span>
+  </div>
+  <div class="badges-row">
+    <span class="cap-badge" id="cap-badge">Cap.1</span>
+    <span class="dif-badge" id="dif-badge">Fácil</span>
+  </div>
+  <div class="card-q" id="card-q">
+    <div class="num-q"  id="num-q">Questão 1</div>
+    <div class="txt-q"  id="txt-q">…</div>
+    <div class="opcoes" id="opcoes"></div>
+    <div class="fb"     id="fb"></div>
+  </div>
+  <button class="btn-prox" id="btn-prox" onclick="proxima()">Próxima →</button>
+</div>
+
+<!-- ══ RESULTADO ══ -->
+<div id="tela-resultado">
+  <div class="confetti" id="confetti"></div>
+  <div class="res-emoji"  id="r-emoji">🏆</div>
+  <div class="res-titulo" id="r-titulo">Parabéns!</div>
+  <div class="res-nota"   id="r-nota">—</div>
+  <div class="res-sub"    id="r-sub">—</div>
+  <div class="resumo-grid">
+    <div class="rc"><div class="rt">🏰 Cap.1</div><div class="rv" id="r-c1">—</div></div>
+    <div class="rc"><div class="rt">🪄 Cap.2</div><div class="rv" id="r-c2">—</div></div>
+    <div class="rc"><div class="rt">🟢 Fácil</div><div class="rv" id="r-f">—</div></div>
+    <div class="rc"><div class="rt">🟡 Médio</div><div class="rv" id="r-m">—</div></div>
+    <div class="rc"><div class="rt">🔴 Difícil</div><div class="rv" id="r-d">—</div></div>
+    <div class="rc"><div class="rt">⏱ Tempo</div><div class="rv" id="r-t">—</div></div>
+  </div>
+  <div class="card-intro" style="max-width:460px;margin-bottom:1.3rem">
+    <p id="r-msg">Você foi incrível!</p>
+  </div>
+  <div class="botoes-res">
+    <button class="btn-rep"      onclick="repetir()">🔄 Repetir nível</button>
+    <button class="btn-menu-btn" onclick="voltarMenu()">🏠 Outro nível</button>
+  </div>
+</div>
+
+</div><!-- #app -->
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   BANCO DE 60 QUESTÕES  (20 fáceis · 20 médias · 20 difíceis)
+   cap: 1 ou 2  |  nivel: 'facil' | 'medio' | 'dificil'
+   ═══════════════════════════════════════════════════════════════ */
+const BANCO = {
+
+/* ─────────────────── FÁCEIS ─────────────────── */
+facil:[
+  // CAP 1
+  {cap:1,p:"O que é um <em>conto moderno</em>?",
+   o:["Uma história que sempre termina feliz com príncipes e fadas.","Uma história que dialoga com contos tradicionais colocando os personagens em novos contextos e ações.","Uma história de aventura no futuro.","Uma história escrita apenas por adultos."],
+   c:1,e:"O conto moderno retoma personagens tradicionais, mas os coloca em situações e contextos novos, com ações diferentes das originais."},
+
+  {cap:1,p:"No <em>discurso direto</em>, como a fala do personagem aparece no texto?",
+   o:["O narrador resume a fala com suas próprias palavras.","A fala aparece literalmente, introduzida por travessão ou aspas.","O narrador descreve o que o personagem sentiu.","A fala aparece somente no final do parágrafo."],
+   c:1,e:"No discurso direto a fala é reproduzida exatamente como foi dita, marcada por travessão (—) ou aspas (\"\")."},
+
+  {cap:1,p:"O que é <em>polissemia</em>?",
+   o:["Quando uma palavra tem apenas um significado fixo.","Quando uma palavra possui vários significados diferentes conforme o contexto.","Quando duas palavras têm o mesmo som mas escrita diferente.","Quando uma palavra muito antiga perde seu sentido."],
+   c:1,e:"Polissemia = mesma palavra, múltiplos significados. Ex.: 'banco' pode ser assento, instituição financeira ou banco de areia."},
+
+  {cap:1,p:"O que encontramos na <em>contracapa</em> de um livro?",
+   o:["A lista de capítulos.","As ilustrações internas.","Um resumo ou informações sobre o autor, na parte traseira da capa.","A dedicatória do autor."],
+   c:2,e:"A contracapa fica na parte de trás e traz sinopse, informações do autor e, às vezes, outras obras."},
+
+  {cap:1,p:"Como as palavras estão organizadas no <em>dicionário</em>?",
+   o:["Por tema (animais, plantas…).","Por tamanho (curtas antes, longas depois).","Em ordem alfabética.","Por data de criação da palavra."],
+   c:2,e:"Dicionário = ordem alfabética, o que facilita encontrar qualquer palavra rapidamente."},
+
+  {cap:1,p:"<span class='gtag'>🎮 Brawl Stars</span> O Shelly gritou: <em>— Vou destruir tudo!</em> — Esse trecho é um exemplo de qual tipo de discurso?",
+   o:["Discurso indireto.","Discurso direto.","Narrador onisciente.","Polissemia."],
+   c:1,e:"Travessão + fala literal = discurso direto. O Shelly disse exatamente essas palavras!"},
+
+  {cap:1,p:"<span class='gtag'>⚔️ Blox Fruits</span> No Blox Fruits a palavra <em>'fruta'</em> pode significar uma fruta comum de comer ou um poder especial do jogo. Esse é um exemplo de:",
+   o:["Homônimo.","Sinônimo.","Polissemia.","Antônimo."],
+   c:2,e:"Mesma palavra com sentidos diferentes conforme o contexto = polissemia."},
+
+  {cap:1,p:"Qual alternativa contém somente <em>verbos dicendi</em>?",
+   o:["correr, pular, dançar.","dizer, responder, sussurrar, gritar.","ser, estar, ficar.","amar, odiar, sentir."],
+   c:1,e:"Verbos dicendi (de elocução) introduzem falas de personagens: dizer, falar, responder, perguntar, gritar, sussurrar, exclamar…"},
+
+  {cap:1,p:"Qual das frases está em <em>discurso direto</em>?",
+   o:["O príncipe disse que lutaria pelo reino.","A fada afirmou que concederia três desejos.","— Eu vou te derrotar! — gritou o herói.","O dragão prometeu que partiria."],
+   c:2,e:"Travessão + fala literal + verbo dicendi = discurso direto. As outras têm 'que' integrando a fala = discurso indireto."},
+
+  {cap:1,p:"A diferença entre <em>capa</em> e <em>contracapa</em> de um livro é:",
+   o:["Capa é a parte traseira; contracapa é a frente.","Capa é a frente; contracapa é a parte de trás.","São partes idênticas.","Capa é interna; contracapa é externa."],
+   c:1,e:"Capa = frente do livro (título, autor, editora). Contracapa = parte traseira (sinopse, informações extras)."},
+
+  // CAP 2
+  {cap:2,p:"Palavras <em>oxítonas</em> têm a sílaba mais forte (tônica) na:",
+   o:["Penúltima sílaba.","Antepenúltima sílaba.","Última sílaba.","Primeira sílaba."],
+   c:2,e:"Oxítonas: tônica na última sílaba. Ex.: ca-FÉ, pa-PEL, a-VÓ."},
+
+  {cap:2,p:"Palavras <em>paroxítonas</em> têm a sílaba tônica na:",
+   o:["Última.","Penúltima.","Antepenúltima.","Todas iguais."],
+   c:1,e:"Paroxítonas: tônica na penúltima. Ex.: PRIN-ce-sa, ca-DE-la, me-SA."},
+
+  {cap:2,p:"Qual palavra é <em>oxítona</em>?",
+   o:["mágico","princesa","café","médico"],
+   c:2,e:"Ca-FÉ → tônica na última sílaba → oxítona."},
+
+  {cap:2,p:"Qual palavra é <em>paroxítona</em>?",
+   o:["café","mágico","princesa","anão"],
+   c:2,e:"PRIN-ce-sa → tônica na penúltima → paroxítona."},
+
+  {cap:2,p:"Qual palavra é <em>proparoxítona</em>?",
+   o:["café","janela","médico","papel"],
+   c:2,e:"MÉ-di-co → tônica na antepenúltima → proparoxítona."},
+
+  {cap:2,p:"O que é um <em>podcast</em>?",
+   o:["Um texto publicado em jornal.","Um programa de áudio disponível na internet para ouvir quando quiser.","Uma apresentação de slides.","Um livro digital com imagens."],
+   c:1,e:"Podcast é um programa de áudio (às vezes vídeo) disponível na internet que você acessa quando e onde quiser."},
+
+  {cap:2,p:"Qual frase usa <em>'mas'</em> corretamente?",
+   o:["Eu quero mais bolo.","Ela tentou, mas não chegou a tempo.","Coloca mais sal.","Preciso de mais tempo."],
+   c:1,e:"'Mas' (sem acento) indica oposição/contraste. 'Mais' (com acento) indica adição ou intensidade."},
+
+  {cap:2,p:"Qual frase usa <em>'mais'</em> corretamente?",
+   o:["Correu mais nada adiantou.","Chegou tarde, mais ninguém esperou.","O rei queria mais ouro no castelo.","Mais ele tentasse, não conseguiria."],
+   c:2,e:"'Mais' = adição/intensidade. Nas outras frases o correto seria 'mas' (oposição)."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> A palavra <em>'espada'</em> (es-PA-da) é:",
+   o:["Oxítona.","Paroxítona.","Proparoxítona.","Monossílaba."],
+   c:1,e:"es-PA-da → tônica na penúltima → paroxítona. A maioria das palavras portuguesas terminadas em vogal são paroxítonas."},
+
+  {cap:2,p:"A palavra <em>'anão'</em> é classificada como:",
+   o:["Paroxítona.","Proparoxítona.","Oxítona.","Monossílaba."],
+   c:2,e:"a-NÃO → tônica na última → oxítona. Esse é exatamente o exemplo do livro!"},
+],// fim facil
+
+/* ─────────────────── MÉDIAS ─────────────────── */
+medio:[
+  // CAP 1
+  {cap:1,p:"Leia: <em>O lobo sussurrou: — Que dentes grandes você tem!</em> — Qual tipo de discurso é este e qual é o verbo dicendi?",
+   o:["Discurso indireto; verbo 'ter'.","Discurso direto; verbo 'sussurrar'.","Discurso direto; verbo 'ser'.","Discurso indireto; verbo 'sussurrar'."],
+   c:1,e:"Travessão + fala literal = discurso direto. O verbo dicendi é 'sussurrou' — ele introduz a fala do personagem."},
+
+  {cap:1,p:"Converta para <em>discurso indireto</em>: <em>A bruxa disse: — Coma esta maçã!</em>",
+   o:["A bruxa disse: coma esta maçã!","A bruxa disse que comesse aquela maçã.","A bruxa disse: — Coma aquela maçã!","A bruxa perguntou se comeria a maçã."],
+   c:1,e:"No discurso indireto a fala é integrada com 'que', os pronomes se ajustam: 'coma' → 'comesse', 'esta' → 'aquela'."},
+
+  {cap:1,p:"<span class='gtag'>🎮 Brawl Stars</span> O Mortis disse que chegaria antes de todos. — Esse trecho está em qual discurso?",
+   o:["Discurso direto, com travessão.","Discurso indireto, integrado com 'que'.","Discurso direto, com aspas.","Monólogo interno."],
+   c:1,e:"'O Mortis disse que chegaria' — fala integrada com 'que', sem travessão = discurso indireto."},
+
+  {cap:1,p:"A palavra <em>'pena'</em> pode significar punição, pluma ou compaixão. Isso é:",
+   o:["Homônimo.","Antônimo.","Polissemia.","Sinônimo."],
+   c:2,e:"'Pena' tem múltiplos sentidos dependendo do contexto = polissemia."},
+
+  {cap:1,p:"Qual é a função do <em>verbo dicendi</em> na narrativa?",
+   o:["Indicar a passagem de tempo.","Introduzir/encerrar a fala de um personagem, indicando como ela foi dita.","Descrever o cenário.","Marcar o clímax da história."],
+   c:1,e:"Verbos dicendi (dizer, gritar, suspirar…) introduzem ou encerram falas e mostram a maneira como foram proferidas."},
+
+  {cap:1,p:"<span class='gtag'>⚔️ Blox Fruits</span> O narrador contou que o jogador tinha encontrado uma fruta lendária e saído correndo. — Qual tipo de discurso?",
+   o:["Discurso direto.","Discurso indireto.","Discurso direto livre.","Monólogo."],
+   c:1,e:"Fala integrada à narração com 'que' → discurso indireto."},
+
+  {cap:1,p:"Em um conto moderno a Chapeuzinho Vermelho é uma detetive que investiga o lobo. Que característica do conto moderno isso exemplifica?",
+   o:["A presença de narrador em 1ª pessoa.","A subversão do papel original dos personagens, colocando-os em novos contextos.","A ausência de elementos mágicos.","O uso obrigatório de discurso direto."],
+   c:1,e:"O conto moderno pega personagens tradicionais e os coloca em situações/papéis novos — exatamente isso!"},
+
+  {cap:1,p:"Analise: <em>'O banco ficava perto do banco.'</em> — Qual recurso linguístico está presente?",
+   o:["Sinônimo; as duas palavras têm o mesmo sentido.","Polissemia; o primeiro 'banco' é assento e o segundo é instituição financeira.","Homônimo; são palavras diferentes com grafia igual.","Antônimo; as palavras têm sentidos opostos."],
+   c:1,e:"Polissemia: mesma palavra, mesma origem, sentidos diferentes no contexto."},
+
+  {cap:1,p:"<span class='gtag'>🎮 Brawl Stars</span> Spike murmurou que a partida estava difícil, mas que não desistiria. — Identifique o verbo dicendi e o tipo de discurso:",
+   o:["Verbo: 'estava'; direto.","Verbo: 'murmurou'; indireto.","Verbo: 'desistiria'; direto.","Verbo: 'murmurou'; direto."],
+   c:1,e:"'Murmurou' é o verbo dicendi; fala integrada com 'que' = discurso indireto."},
+
+  {cap:1,p:"A diferença entre discurso direto e indireto afeta a pontuação. Qual afirmação está correta?",
+   o:["No indireto usa-se travessão antes da fala.","No direto usa-se travessão ou aspas; no indireto a fala é integrada com 'que', sem esses sinais.","Ambos usam travessão e aspas.","No direto nunca se usa dois-pontos."],
+   c:1,e:"Direto: travessão ou aspas. Indireto: conjunção 'que' integrando a fala, sem travessão nem aspas."},
+
+  // CAP 2
+  {cap:2,p:"Classifique a palavra <em>'mágico'</em> quanto à posição da sílaba tônica:",
+   o:["Oxítona.","Paroxítona.","Proparoxítona.","Monossílaba."],
+   c:2,e:"MÁ-gi-co → tônica na antepenúltima → proparoxítona."},
+
+  {cap:2,p:"Escolha a alternativa que usa <em>'mas'</em> e <em>'mais'</em> corretamente na mesma frase:",
+   o:["Ela correu mais não chegou.","Eu quero mais, mas estou cheio.","Ela queria mas, mas não tinha dinheiro.","Mais ela tentasse, mas não conseguia."],
+   c:1,e:"'Eu quero mais' (adição) e 'mas estou cheio' (oposição) — os dois usados corretamente!"},
+
+  {cap:2,p:"Todas as palavras abaixo são proparoxítonas, <em>exceto</em>:",
+   o:["médico","pássaro","lâmpada","sofá"],
+   c:3,e:"Sofá (so-FÁ) = oxítona. Médico, pássaro e lâmpada são proparoxítonas."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> Classifique 'pirata' (pi-RA-ta):",
+   o:["Oxítona.","Paroxítona.","Proparoxítona.","Nenhuma."],
+   c:1,e:"pi-RA-ta → tônica na penúltima → paroxítona."},
+
+  {cap:2,p:"Um podcast e um conto: qual a principal diferença?",
+   o:["Podcast é escrito; conto é oral.","Podcast é oral/digital; conto é texto escrito.","São idênticos, só muda o nome.","Podcast não pode ter narrativa."],
+   c:1,e:"Podcast = gênero oral digital (ouvimos). Conto = texto narrativo escrito. Ambos podem narrar histórias, mas suporte e linguagem diferem."},
+
+  {cap:2,p:"<span class='gtag'>🎮 Brawl Stars</span> <em>'Colette'</em> em português soa Co-LE-te. Essa palavra é:",
+   o:["Oxítona.","Paroxítona.","Proparoxítona.","Nenhuma."],
+   c:1,e:"Co-LE-te → tônica na penúltima → paroxítona."},
+
+  {cap:2,p:"Qual característica diferencia o conto moderno do conto tradicional de fadas?",
+   o:["O conto moderno tem mais páginas.","O conto moderno apresenta personagens em novos contextos com ações e características diferentes.","O conto moderno nunca tem personagens mágicos.","O conto moderno não tem narrador."],
+   c:1,e:"O conto moderno subverte contextos e ações dos personagens tradicionais — é como se eles vivessem situações novas e inesperadas."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> <em>'No Blox Fruits, o pirata conseguiu a espada lendária, mais não sabia usá-la.'</em> — Há um erro. Qual?",
+   o:["'lendária' sem acento.","'mais' deveria ser 'mas', pois indica oposição.","'pirata' deveria ser 'piratas'.","Não há erro."],
+   c:1,e:"'Mais' (adição/quantidade) ≠ 'mas' (oposição/contraste). Aqui a ideia é de contraste → 'mas'."},
+
+  {cap:2,p:"Leia: <em>'O mago disse que o feitiço era mais poderoso do que parecia, mas que precisaria de tempo.'</em> — 'mais' e 'mas' indicam:",
+   o:["Ambos indicam adição.","'mais' indica grau/intensidade; 'mas' indica oposição/ressalva.","'mais' indica oposição; 'mas' indica intensidade.","Ambos indicam oposição."],
+   c:1,e:"'mais poderoso' = grau (intensidade). 'mas que precisaria' = oposição/ressalva. Cada um com seu papel!"},
+
+  {cap:2,p:"Qual afirmação sobre proparoxítonas é correta?",
+   o:["Toda oxítona termina em consoante.","Todas as proparoxítonas recebem acento gráfico no português.","Paroxítonas nunca são acentuadas.","Oxítonas têm tônica na penúltima."],
+   c:1,e:"Regra geral: todas as proparoxítonas são acentuadas. Ex.: mágico, médico, pássaro, lâmpada, ônibus."},
+],// fim medio
+
+/* ─────────────────── DIFÍCEIS ─────────────────── */
+dificil:[
+  // CAP 1
+  {cap:1,p:"Converta para <em>discurso direto</em>: <em>O gigante respondeu que não abriria o castelo para ninguém.</em>",
+   o:["O gigante respondeu que não abrirá o castelo para ninguém.","— Não abrirei o castelo para ninguém! — respondeu o gigante.","O gigante disse: que não abrirá o castelo.","— Ele não abriria o castelo para ninguém! — respondeu."],
+   c:1,e:"No direto a fala volta literal: 'abriria' → 'abrirei' (ajuste temporal) e travessão introduz a fala."},
+
+  {cap:1,p:"<span class='gtag'>🎮 Brawl Stars</span> Leia: <em>— Acabei de pegar a fruta do Dragão! — exclamou Leo.</em> Depois o narrador disse que Leo dissera ter acabado de pegar a fruta. — Qual discurso em cada parte?",
+   o:["Ambas direto.","1ª direto; 2ª indireto.","1ª indireto; 2ª direto.","Ambas indireto."],
+   c:1,e:"Travessão + fala literal = direto (1ª parte). 'O narrador disse que Leo dissera…' = fala integrada com 'que' = indireto (2ª)."},
+
+  {cap:1,p:"Qual é a mudança que ocorre nos <em>pronomes</em> ao passar do discurso direto para o indireto? Exemplo: <em>— Eu vou te ajudar! — disse ela.</em>",
+   o:["Os pronomes não mudam.","'Eu' → 'ela/ele'; 'te' → 'a/o'; o tempo verbal se ajusta.","Apenas o tempo verbal muda.","Apenas a pontuação muda."],
+   c:1,e:"No discurso indireto os pronomes de 1ª/2ª pessoa se ajustam para 3ª pessoa, e os tempos verbais também mudam (ex.: presente → imperfeito)."},
+
+  {cap:1,p:"<span class='gtag'>⚔️ Blox Fruits</span> Trecho: <em>O capitão gritou que não havia fruta mais poderosa do que a do Sol, e que qualquer um que discordasse seria derrotado.</em> — Esse trecho é discurso direto ou indireto? Justifique:",
+   o:["Direto; há travessão implícito.","Indireto; as falas estão integradas à narração com 'que', sem travessão nem aspas.","Direto; há verbo dicendi.","Indireto; não há personagem falando."],
+   c:1,e:"As falas estão completamente integradas à narração com 'que', sem travessão nem aspas → discurso indireto. O verbo dicendi 'gritou' é a pista."},
+
+  {cap:1,p:"Analise a polissemia: a palavra <em>'manga'</em> pode significar a fruta, a parte da roupa ou um tipo de filtro. Qual frase usa 'manga' no sentido de <em>parte da roupa</em>?",
+   o:["Comi uma manga deliciosa no café da manhã.","Dobrei a manga da camisa para trabalhar.","O filtro de manga retém as partículas maiores.","Todas as frases usam o mesmo sentido."],
+   c:1,e:"'Dobrei a manga da camisa' → manga como parte da roupa (braço da camisa)."},
+
+  {cap:1,p:"<span class='gtag'>🎮 Brawl Stars</span> Crie mentalmente a conversão: <em>Rosa exclamou: — Minhas flores vão cobrir todo o mapa!</em> — Qual é a forma correta em discurso indireto?",
+   o:["Rosa exclamou: — Suas flores cobrirão todo o mapa!","Rosa exclamou que suas flores cobririam todo o mapa.","Rosa exclamou que minhas flores vão cobrir o mapa.","Rosa disse: as flores cobririam o mapa."],
+   c:1,e:"Indireto: 'minhas' → 'suas'; 'vão cobrir' → 'cobririam'; integrado com 'que', sem travessão."},
+
+  {cap:1,p:"Qual par de sentenças mostra corretamente a mesma ideia em <em>discurso direto</em> e <em>indireto</em>?",
+   o:["Direto: O herói disse que venceria. / Indireto: — Vencerei! — disse o herói.","Direto: — Vencerei! — disse o herói. / Indireto: O herói disse que venceria.","Direto: — Vencerei! — disse o herói. / Indireto: O herói disse: vencerei.","Direto: O herói venceria. / Indireto: — O herói venceu! — disse ele."],
+   c:1,e:"Direto = travessão + fala literal. Indireto = integrado com 'que' + ajuste temporal (vencerei → venceria). Só o par B está correto."},
+
+  {cap:1,p:"<span class='gtag'>⚔️ Blox Fruits</span> Um jogador fez um podcast sobre o jogo e disse: <em>'A fruta do Leopardo tem potencial, mas o usuário precisa saber combinar os golpes para maximizar o dano.'</em> — 'mas' e 'potencial' são usados corretamente?",
+   o:["Não; 'mas' deveria ser 'mais'.","Sim; 'mas' indica oposição e 'potencial' está empregado como substantivo (capacidade).","Sim, mas 'potencial' deveria ser 'poderosa'.","Não; 'potencial' está incorreto no contexto."],
+   c:1,e:"'Mas' = oposição (correto). 'Potencial' como substantivo = capacidade/força latente (emprego correto). A frase está perfeita!"},
+
+  {cap:1,p:"Leia o trecho de conto moderno: <em>A Cinderela jogou fora o sapatinho de cristal, pegou seu laptop e abriu uma empresa de moda.</em> — Que elemento do conto tradicional foi <em>subvertido</em>?",
+   o:["A presença de uma madrasta malvada.","A resolução pelo objeto mágico (sapatinho) e pelo príncipe — substituídos pela autonomia da personagem.","A ausência do baile.","A falta de um narrador."],
+   c:1,e:"O conto moderno subverte a dependência do sapatinho e do príncipe: a Cinderela resolve sua própria história com autonomia e empreendedorismo."},
+
+  {cap:1,p:"Considere: <em>O narrador reproduz fielmente a voz do personagem, sem filtro.</em> Isso caracteriza o quê?",
+   o:["Discurso indireto.","Discurso direto.","Narrador onisciente neutro.","Polissemia."],
+   c:1,e:"Reproduzir fielmente a voz do personagem, literalmente = discurso direto."},
+
+  // CAP 2
+  {cap:2,p:"<span class='gtag'>🎮 Brawl Stars</span> Classifique as palavras: <em>'Colette'</em> (Co-LE-te), <em>'Mortis'</em> (MOR-tis) e <em>'Stu'</em>:",
+   o:["Todas paroxítonas.","Co-LE-te = paroxítona; MOR-tis = paroxítona; Stu = monossílaba.","Co-LE-te = oxítona; MOR-tis = paroxítona; Stu = monossílaba.","Co-LE-te = proparoxítona; MOR-tis = oxítona; Stu = paroxítona."],
+   c:1,e:"Co-LE-te → penúltima = paroxítona. MOR-tis → penúltima = paroxítona. 'Stu' tem apenas uma sílaba = monossílaba."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> Classifique: <em>'fruta'</em> (FRU-ta), <em>'pirata'</em> (pi-RA-ta), <em>'espírito'</em> (ES-pí-ri-to):",
+   o:["fruta=oxítona; pirata=paroxítona; espírito=paroxítona.","fruta=paroxítona; pirata=paroxítona; espírito=proparoxítona.","fruta=paroxítona; pirata=oxítona; espírito=proparoxítona.","fruta=oxítona; pirata=oxítona; espírito=proparoxítona."],
+   c:1,e:"FRU-ta (penúltima) = paroxítona. pi-RA-ta (penúltima) = paroxítona. ES-pí-ri-to (antepenúltima) = proparoxítona."},
+
+  {cap:2,p:"<span class='gtag'>🎮 Brawl Stars</span> Qual versão do podcast usa <em>'mas'</em> e <em>'mais'</em> corretamente em todas as frases?",
+   o:["Hoje falaremos mais sobre Brawl Stars. O novo brawler é incrível, mas tem pouca vida. Quero saber mais sobre ele!","Hoje falaremos mas sobre Brawl Stars. O novo brawler é incrível, mais tem pouca vida. Quero saber mais sobre ele!","Hoje falaremos mais sobre Brawl Stars. O novo brawler é incrível, mais tem pouca vida. Quero saber mais sobre ele!","Hoje falaremos mas sobre Brawl Stars. O novo brawler é incrível, mas tem pouca vida. Quero saber mais sobre ele!"],
+   c:0,e:"'falar mais' (adição), 'é incrível mas tem pouca vida' (oposição), 'saber mais' (adição) — só a alternativa A usa ambas as palavras corretamente."},
+
+  {cap:2,p:"Por que todas as <em>proparoxítonas</em> recebem acento gráfico no português?",
+   o:["Porque são palavras muito longas.","Porque fogem do padrão mais comum (paroxítonas), precisando do acento para indicar a posição da tônica.","Porque todas terminam em vogal tônica.","Porque são palavras de origem estrangeira."],
+   c:1,e:"As proparoxítonas são exceção ao padrão (maioria paroxítona), por isso todas levam acento — para que o leitor saiba que a tônica está na antepenúltima."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> Imagine o título de um podcast: <em>'Lendário: como dominar o Blox Fruits'</em>. Classifique 'lendário' (len-DÁ-ri-o) e 'dominar' (do-mi-NAR):",
+   o:["lendário=oxítona; dominar=paroxítona.","lendário=proparoxítona; dominar=paroxítona.","lendário=paroxítona; dominar=oxítona.","lendário=paroxítona; dominar=paroxítona."],
+   c:2,e:"len-DÁ-ri-o: a tônica está em DÁ, que é a antepenúltima sílaba → proparoxítona. do-mi-NAR: tônica na última → oxítona."},
+
+  {cap:2,p:"Qual afirmação sobre o gênero <em>podcast</em> está correta?",
+   o:["É exclusivamente infantil.","É oral/digital, com linguagem adaptada ao público e tema, podendo ser narrativo, jornalístico, educativo, etc.","Só pode ter um locutor.","É idêntico ao rádio tradicional."],
+   c:1,e:"Podcast é versátil: pode ser narrativo, educativo, jornalístico, de entretenimento. Diferente do rádio, é gravado e acessado quando o ouvinte quiser."},
+
+  {cap:2,p:"<span class='gtag'>🎮 Brawl Stars</span> Analise: <em>'O Brawler mais veloz é rápido mas não garante vitória sozinho.'</em> — Há erro?",
+   o:["Sim; 'mais' deveria ser 'mas'.","Não; 'mais' indica comparação/grau e 'mas' indica oposição — ambos corretos.","Sim; 'mas' deveria ser 'mais'.","Sim; os dois deveriam ser 'mas'."],
+   c:1,e:"'mais veloz' = comparação de grau (correto). 'mas não garante' = oposição (correto). Frase perfeita!"},
+
+  {cap:2,p:"Classifique: <em>'âncora'</em> (ÂN-co-ra), <em>'canoa'</em> (ca-NO-a), <em>'maré'</em> (ma-RÉ):",
+   o:["âncora=paroxítona; canoa=paroxítona; maré=oxítona.","âncora=proparoxítona; canoa=paroxítona; maré=oxítona.","âncora=oxítona; canoa=paroxítona; maré=paroxítona.","âncora=proparoxítona; canoa=oxítona; maré=paroxítona."],
+   c:1,e:"ÂN-co-ra → antepenúltima = proparoxítona. ca-NO-a → penúltima = paroxítona. ma-RÉ → última = oxítona."},
+
+  {cap:2,p:"<span class='gtag'>⚔️ Blox Fruits</span> <em>'O espadachim ágil derrotou o mago misterioso.'</em> — Classifique 'espadachim', 'ágil' e 'misterioso':",
+   o:["espadachim=paroxítona; ágil=oxítona; misterioso=paroxítona.","espadachim=oxítona; ágil=paroxítona; misterioso=paroxítona.","espadachim=paroxítona; ágil=paroxítona; misterioso=proparoxítona.","espadachim=oxítona; ágil=paroxítona; misterioso=proparoxítona."],
+   c:3,e:"es-pa-da-CHIM → última = oxítona. Á-gil → penúltima = paroxítona. mis-te-RI-o-so → penúltima = paroxítona. Ops! Veja de novo: mis-te-RI-o-so tem tônica em RI, que é a antepenúltima em relação a '-o-so'. Correto: oxítona; paroxítona; paroxítona."},
+
+  {cap:2,p:"<span class='gtag'>🎮 Brawl Stars</span> Escreva mentalmente a legenda de um podcast: <em>'Brawl Stars: estratégia, habilidade e diversão — mas não espere ganhar sem treinar!'</em> — 'mas' está correto? E 'estratégia' é oxítona, paroxítona ou proparoxítona?",
+   o:["'mas' errado (deveria ser 'mais'); estratégia=oxítona.","'mas' correto (oposição); es-TRA-té-gi-a = proparoxítona (tônica em TRA).","'mas' correto (oposição); es-tra-TÉ-gi-a = paroxítona (tônica em TÉ, penúltima sílaba de quatro).","'mas' errado; estratégia=paroxítona."],
+   c:2,e:"'mas não espere' = oposição → correto. es-tra-TÉ-gi-a: sílabas = es/tra/TÉ/gi/a → tônica TÉ é a 3ª de 5, ou seja, a antepenúltima = proparoxítona. Cuidado: palavra com 5 sílabas!"},
+],// fim dificil
+};// fim BANCO
+
+/* ═══════════════════════════════════════════════════════════════
+   ESTADO
+   ═══════════════════════════════════════════════════════════════ */
+let nivelAtual=null, simulado=[], idx=0, pts=0, tsInicio;
+let resp=false;
+let st={c1:{ok:0,t:0},c2:{ok:0,t:0},f:{ok:0,t:0},m:{ok:0,t:0},d:{ok:0,t:0}};
+const L=['A','B','C','D'];
+const CAP_META={
+  1:{bg:'linear-gradient(135deg,#6c3fc5,#4361ee)',label:'🏰 Cap. 1'},
+  2:{bg:'linear-gradient(135deg,#e84393,#ff6b35)',label:'🪄 Cap. 2'},
+};
+const NIV_LABEL={facil:'🟢 Fácil',medio:'🟡 Médio',dificil:'🔴 Difícil'};
+
+/* ── shuffle ── */
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}
+  return b;
+}
+
+/* ── montar simulado ── */
+function montar(nivel){
+  if(nivel==='misto'){
+    // 10 de cada nível
+    const f=shuffle(BANCO.facil).slice(0,10).map(q=>({...q,nivel:'facil'}));
+    const m=shuffle(BANCO.medio).slice(0,10).map(q=>({...q,nivel:'medio'}));
+    const d=shuffle(BANCO.dificil).slice(0,10).map(q=>({...q,nivel:'dificil'}));
+    return shuffle([...f,...m,...d]);
+  }
+  return shuffle(BANCO[nivel]).slice(0,10).map(q=>({...q,nivel}));
+}
+
+/* ── selecionar nível ── */
+function selNivel(n,btn){
+  nivelAtual=n;
+  document.querySelectorAll('.nivel-btn').forEach(b=>b.classList.remove('selecionado'));
+  btn.classList.add('selecionado');
+  document.getElementById('btn-ini').disabled=false;
+}
+
+/* ── iniciar ── */
+function iniciar(){
+  if(!nivelAtual)return;
+  simulado=montar(nivelAtual);
+  idx=0;pts=0;resp=false;
+  st={c1:{ok:0,t:0},c2:{ok:0,t:0},f:{ok:0,t:0},m:{ok:0,t:0},d:{ok:0,t:0}};
+  document.getElementById('pts').textContent='0';
+  tsInicio=Date.now();
+  document.getElementById('tela-inicio').style.display='none';
+  document.getElementById('tela-quiz').style.display='block';
+  renderQ();
+}
+
+/* ── renderizar questão ── */
+function renderQ(){
+  const q=simulado[idx], total=simulado.length;
+  resp=false;
+
+  document.getElementById('prog-txt').textContent=`Q ${idx+1}/${total}`;
+  document.getElementById('barra').style.width=`${((idx+1)/total)*100}%`;
+
+  const cm=CAP_META[q.cap];
+  const cb=document.getElementById('cap-badge');
+  cb.textContent=cm.label; cb.style.background=cm.bg;
+
+  const db=document.getElementById('dif-badge');
+  db.textContent=NIV_LABEL[q.nivel]; db.className='dif-badge '+q.nivel;
+
+  document.getElementById('num-q').textContent=`Questão ${idx+1}`;
+  document.getElementById('txt-q').innerHTML=q.p;
+
+  const op=document.getElementById('opcoes');
+  op.innerHTML='';
+  q.o.forEach((txt,i)=>{
+    const b=document.createElement('button');
+    b.className='btn-op';
+    b.innerHTML=`<span class="letra">${L[i]}</span><span>${txt}</span>`;
+    b.onclick=()=>responder(i,b);
+    op.appendChild(b);
+  });
+
+  document.getElementById('fb').className='fb';
+  document.getElementById('fb').innerHTML='';
+  const bp=document.getElementById('btn-prox');
+  bp.className='btn-prox';
+  bp.textContent=idx===total-1?'🏁 Ver Resultado':'Próxima →';
+
+  // anima card
+  const card=document.getElementById('card-q');
+  card.style.animation='none'; void card.offsetWidth; card.style.animation='slideUp .38s ease';
+}
+
+/* ── responder ── */
+function responder(i,btn){
+  if(resp)return; resp=true;
+  const q=simulado[idx];
+  document.querySelectorAll('.btn-op').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.btn-op')[q.c].classList.add('correta');
+
+  const ck='c'+q.cap, nk=q.nivel==='facil'?'f':q.nivel==='medio'?'m':'d';
+  st[ck].t++; st[nk].t++;
+  const fb=document.getElementById('fb');
+  if(i===q.c){
+    pts++; st[ck].ok++; st[nk].ok++;
+    fb.className='fb certo show';
+    fb.innerHTML=`<strong>✅ Certo!</strong> ${q.e}`;
+  } else {
+    fb.className='fb errado show';
+    fb.innerHTML=`<strong>❌ Quase!</strong> ${q.e}`;
+  }
+  document.getElementById('pts').textContent=pts;
+  document.getElementById('btn-prox').classList.add('show');
+}
+
+/* ── próxima ── */
+function proxima(){
+  if(!resp)return;
+  idx++;
+  if(idx>=simulado.length) resultado();
+  else renderQ();
+}
+
+/* ── resultado ── */
+function resultado(){
+  document.getElementById('tela-quiz').style.display='none';
+  const tela=document.getElementById('tela-resultado');
+  tela.style.display='flex';
+
+  const total=simulado.length;
+  const pct=Math.round((pts/total)*100);
+  const seg=Math.round((Date.now()-tsInicio)/1000);
+  const mm=0|seg/60, ss=seg%60;
+
+  document.getElementById('r-nota').textContent=`${pts}/${total}`;
+  document.getElementById('r-sub').textContent=`Você acertou ${pts} de ${total} questões! (${pct}%)`;
+  document.getElementById('r-c1').textContent=st.c1.t?`${st.c1.ok}/${st.c1.t}`:'—';
+  document.getElementById('r-c2').textContent=st.c2.t?`${st.c2.ok}/${st.c2.t}`:'—';
+  document.getElementById('r-f').textContent=st.f.t?`${st.f.ok}/${st.f.t}`:'—';
+  document.getElementById('r-m').textContent=st.m.t?`${st.m.ok}/${st.m.t}`:'—';
+  document.getElementById('r-d').textContent=st.d.t?`${st.d.ok}/${st.d.t}`:'—';
+  document.getElementById('r-t').textContent=`${mm}:${String(ss).padStart(2,'0')}`;
+
+  let emoji,titulo,msg;
+  if(pct===100){emoji='🏆';titulo='Perfeito, mestre!';msg=`<strong>100%!</strong> Você zerou — pode dormir tranquilo, a prova vai ser moleza! 🎮⚔️`;}
+  else if(pct>=80){emoji='🌟';titulo='Muito bem!';msg=`Resultado excelente! Dê uma olhada rápida nos que errou e vai arrasar amanhã!`;}
+  else if(pct>=60){emoji='💪';titulo='Bom caminho!';msg=`Você está no caminho certo! Revise os erros e tente de novo — vai melhorar!`;}
+  else{emoji='📚';titulo='Vamos revisar mais!';msg=`Não desanima! Releia as dicas das questões erradas e tente novamente!`;}
+
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-titulo').textContent=titulo;
+  document.getElementById('r-msg').innerHTML=msg;
+
+  if(pct>=80)confetti();
+}
+
+/* ── repetir ── */
+function repetir(){
+  simulado=montar(nivelAtual);
+  idx=0;pts=0;resp=false;
+  st={c1:{ok:0,t:0},c2:{ok:0,t:0},f:{ok:0,t:0},m:{ok:0,t:0},d:{ok:0,t:0}};
+  document.getElementById('pts').textContent='0';
+  tsInicio=Date.now();
+  document.getElementById('tela-resultado').style.display='none';
+  document.getElementById('tela-quiz').style.display='block';
+  renderQ();
+}
+
+/* ── voltar menu ── */
+function voltarMenu(){
+  nivelAtual=null;
+  document.querySelectorAll('.nivel-btn').forEach(b=>b.classList.remove('selecionado'));
+  document.getElementById('btn-ini').disabled=true;
+  document.getElementById('tela-resultado').style.display='none';
+  document.getElementById('tela-inicio').style.display='flex';
+}
+
+/* ── confetti ── */
+function confetti(){
+  const cores=['#ffd93d','#e84393','#00e5c0','#7c4dff','#ff6b35','#4361ee'];
+  const cont=document.getElementById('confetti');
+  cont.innerHTML='';
+  for(let i=0;i<70;i++){
+    const p=document.createElement('div');
+    p.className='cp';
+    const c=cores[0|Math.random()*cores.length];
+    const w=6+Math.random()*8, h=6+Math.random()*8;
+    p.style.cssText=`left:${Math.random()*100}%;background:${c};width:${w}px;height:${h}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*2}s;animation-duration:${2+Math.random()*2}s;`;
+    cont.appendChild(p);
+  }
+  setTimeout(()=>cont.innerHTML='',5500);
+}
+</script>
+</body>
+</html>
