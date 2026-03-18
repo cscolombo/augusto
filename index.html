@@ -654,13 +654,17 @@ function renderQ(){
   document.getElementById('num-q').textContent=`Questão ${idx+1}`;
   document.getElementById('txt-q').innerHTML=q.p;
 
+  // embaralha opções mantendo rastreio da correta
+  const opcIndices=shuffle([0,1,2,3]);
+  q._corretaEmbaralhadaIdx=opcIndices.indexOf(q.c);
+
   const op=document.getElementById('opcoes');
   op.innerHTML='';
-  q.o.forEach((txt,i)=>{
+  opcIndices.forEach((origIdx,novoIdx)=>{
     const b=document.createElement('button');
     b.className='btn-op';
-    b.innerHTML=`<span class="letra">${L[i]}</span><span>${txt}</span>`;
-    b.onclick=()=>responder(i,b);
+    b.innerHTML=`<span class="letra">${L[novoIdx]}</span><span>${q.o[origIdx]}</span>`;
+    b.onclick=()=>responder(novoIdx,b);
     op.appendChild(b);
   });
 
@@ -679,13 +683,14 @@ function renderQ(){
 function responder(i,btn){
   if(resp)return; resp=true;
   const q=simulado[idx];
+  const corretaIdx=q._corretaEmbaralhadaIdx;
   document.querySelectorAll('.btn-op').forEach(b=>b.disabled=true);
-  document.querySelectorAll('.btn-op')[q.c].classList.add('correta');
+  document.querySelectorAll('.btn-op')[corretaIdx].classList.add('correta');
 
   const ck='c'+q.cap, nk=q.nivel==='facil'?'f':q.nivel==='medio'?'m':'d';
   st[ck].t++; st[nk].t++;
   const fb=document.getElementById('fb');
-  if(i===q.c){
+  if(i===corretaIdx){
     pts++; st[ck].ok++; st[nk].ok++;
     fb.className='fb certo show';
     fb.innerHTML=`<strong>✅ Certo!</strong> ${q.e}`;
@@ -777,3 +782,4 @@ function confetti(){
 </script>
 </body>
 </html>
+
